@@ -8,6 +8,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
+import com.taj.kafka.com.customdeserializers.OrderDeSerializer;
+
 /**
  * Hello world!
  *
@@ -20,17 +22,21 @@ public class App
         //3 main properties
         props.setProperty("bootstrap.servers", "localhost:9092");
         props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.IntegerDeserializer");
+        props.setProperty("value.deserializer", OrderDeSerializer.class.getName());
         props.setProperty("group.id", "OrderGroup");
         
-        KafkaConsumer<String, Integer> consumer = new KafkaConsumer<>(props);
-      consumer.subscribe(Collections.singletonList("OrderTopic"));
+        KafkaConsumer<String, Order> consumer = new KafkaConsumer<>(props);
+      consumer.subscribe(Collections.singletonList("OrderCTopic"));
       
-      ConsumerRecords<String, Integer> orders = consumer.poll(Duration.ofSeconds(20));
+      ConsumerRecords<String, Order> records = consumer.poll(Duration.ofSeconds(20));
       
-      for (ConsumerRecord<String, Integer> order : orders) {
-		System.out.println("Producet Name " + order.key());
-		System.out.println("Quantity " + order.value());
+      for (ConsumerRecord<String, Order> record : records) {  //fore ctl+space
+    	  
+    	  String customerName = record.key();
+    	  Order order = record.value();
+		System.out.println("customerName" + customerName);
+		System.out.println("Product " + order.getProduct());
+;		System.out.println("Age " + order.getAge());
 	}
       consumer.close();
       

@@ -1,8 +1,10 @@
-package com.taj.kafka.orderproducer;
+package com.taj.kafka.customserializers;
 import java.util.Properties;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+
+import com.taj.kafka.orderproducer.Order;
 
 /**
  * Hello world!
@@ -20,7 +22,7 @@ public class Async {
         order.setCustomerName("Taj");
         order.setProduct("Human");
         order.setAge(23);
-        ProducerRecord<String, Order> record = new ProducerRecord<>("OrderTopic", order.getCustomerName(), order);
+        ProducerRecord<String, Order> record = new ProducerRecord<>("OrderCTopic", order.getCustomerName(), order);
         
         try {
        producer.send(record); //Async not wait for the response      
